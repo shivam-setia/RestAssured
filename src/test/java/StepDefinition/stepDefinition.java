@@ -2,6 +2,8 @@ package StepDefinition;
 
 import POJO.AddPlace;
 import POJO.Location;
+import Resources.TestDataBuild;
+import Resources.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
@@ -24,41 +26,16 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
-public class stepDefinition {
+public class stepDefinition extends utils {
     RequestSpecification resp;
     ResponseSpecification res;
     Response response;
     @Given("Add place paylod")
     public void add_place_paylod() throws JsonProcessingException {
         // Write code here that turns the phrase above into concrete actions
-        RestAssured.baseURI = "https://rahulshettyacademy.com/";
-        AddPlace p = new AddPlace();
-        p.setAccuracy(50);
-        p.setAddress("29 , side layout cohen 09");
-        p.setLanguage("French-IN");
-        p.setPhoneNumber("(+91) 874 556 6789");
-        p.setWebsite("https://rahulshettyacademy.com");
-        p.setName("Frontline house");
 
-        List<String> myList = new ArrayList<>();
-        myList.add("shoe park");
-        myList.add("shoe");
-
-        p.setTypes(myList);
-        Location l = new Location();
-        l.setLat(-38);
-        l.setLng(33);
-        p.setLocation(l);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(p);
-
-// Calculate the length in bytes of the JSON string
-        int contentLength = requestBody.getBytes(StandardCharsets.UTF_8).length;
-
-        RequestSpecification req = new RequestSpecBuilder().setBaseUri("https://rahulshettyacademy.com/")
-                .addQueryParam("key","qaclick123").setContentType(ContentType.JSON)
-                .build();
-        resp = given().spec(req).header("Content-Type", "application/json").body(p).log().all();
+        TestDataBuild data = new TestDataBuild();
+        resp = given().spec(requestSpecificarion()).body(data.addPlacePayload()).log().all();
 
         res = new ResponseSpecBuilder().expectStatusCode(200)
                 .expectContentType(ContentType.JSON).build();
@@ -89,15 +66,7 @@ public class stepDefinition {
         String Resp = response.getBody().asString();
         JsonPath js = new JsonPath(Resp);
         assertEquals(js.get(keyValue).toString(),Expvalue);
-//        String responseBody = response.getBody().asString();
-//        if (responseBody == null || responseBody.isEmpty()) {
-//            throw new RuntimeException("Response body is empty or null");
-//        }
-//
-//        // Then proceed to parse or validate the JSON as required
-//        JsonPath jsonPath = new JsonPath(responseBody);
-//        String actualStatus = jsonPath.getString("status");
-//        assertEquals(actualStatus,value);
+
     }
 
 
