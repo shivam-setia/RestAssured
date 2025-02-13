@@ -19,6 +19,8 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.junit.Assert;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +32,12 @@ public class stepDefinition extends utils {
     RequestSpecification resp;
     ResponseSpecification res;
     Response response;
-    @Given("Add place paylod")
-    public void add_place_paylod() throws JsonProcessingException {
+    @Given("Add place paylod with {string} {string}  {string}")
+    public void add_place_paylod_with(String name, String address, String lang) throws IOException {
         // Write code here that turns the phrase above into concrete actions
 
         TestDataBuild data = new TestDataBuild();
-        resp = given().spec(requestSpecificarion()).body(data.addPlacePayload()).log().all();
-
-        res = new ResponseSpecBuilder().expectStatusCode(200)
-                .expectContentType(ContentType.JSON).build();
+        resp = given().spec(requestSpecificarion()).body(data.addPlacePayload(name, address, lang)).log().all();
 
 
     }
@@ -48,6 +47,8 @@ public class stepDefinition extends utils {
         // Write code here that turns the phrase above into concrete actions
 //        throw new io.cucumber.java.PendingException();
         try {
+            res = new ResponseSpecBuilder().expectStatusCode(200)
+                    .expectContentType(ContentType.JSON).build();
             response = resp.when().post("/maps/api/place/add/json").then().spec(res).log().all().extract().response();
         }catch(Exception e){
             System.out.println(e.getMessage());
