@@ -2,6 +2,7 @@ package StepDefinition;
 
 import POJO.AddPlace;
 import POJO.Location;
+import Resources.EndPoints;
 import Resources.TestDataBuild;
 import Resources.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,18 +39,24 @@ public class stepDefinition extends utils {
 
         TestDataBuild data = new TestDataBuild();
         resp = given().spec(requestSpecificarion()).body(data.addPlacePayload(name, address, lang)).log().all();
-
-
     }
 
-    @When("user calls {string} with post https request")
-    public void user_calls_with_post_https_request(String string) {
+    @When("user calls {string} with {string} https request")
+    public void user_calls_with_https_request(String endPoint, String method) {
         // Write code here that turns the phrase above into concrete actions
 //        throw new io.cucumber.java.PendingException();
         try {
+            EndPoints EndPoint=EndPoints.valueOf(endPoint);  //till here stored value of endpoint from feature file then enum into this variable
+            //have to get value of that enum var using method we created inside enum as getEndpoint and pass it instead of endppoint below
             res = new ResponseSpecBuilder().expectStatusCode(200)
                     .expectContentType(ContentType.JSON).build();
-            response = resp.when().post("/maps/api/place/add/json").then().spec(res).log().all().extract().response();
+            System.out.println(EndPoint.getEndPoint());
+            if(method.equalsIgnoreCase("POST")) {
+                response = resp.when().post(EndPoint.getEndPoint()).then().spec(res).log().all().extract().response();
+            } else if (method.equalsIgnoreCase("GET")) {
+                response = req.when().get(EndPoint.getEndPoint()).then().spec(res).extract().response();
+            }
+
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -64,10 +71,24 @@ public class stepDefinition extends utils {
     public void in_response_body_is(String keyValue, String Expvalue) {
         // Write code here that turns the phrase above into concrete actions
 //        throw new io.cucumber.java.PendingException();
-        String Resp = response.getBody().asString();
-        JsonPath js = new JsonPath(Resp);
-        assertEquals(js.get(keyValue).toString(),Expvalue);
+        assertEquals(getJsonPath(response,keyValue),Expvalue);
 
+    }
+
+    @Then("verify if place_id created maps to {string} using {string}")
+    public void verify_if_place_id_created_maps_to_using(String expectedName, String resource) throws IOException {
+        // Write code here that turns the phrase above into concrete actions
+        //create req spec for get => hit get req => but need place id from response of addplace api
+//        => extract place id from response can use above mthod of @!then as jsonpath is already there
+        //better to create utility for that too in utils file
+
+        //write complete req here
+        String place_id = getJsonPath(response,"place_id");
+        req = given().spec(requestSpecificarion()).queryParam("place_id",place_id);  //till here given part is done
+        // now have to call get request but that was automated above based on ,
+        // method type just recall that method only
+        user_calls_with_https_request(resource,"GET");
+        assertEquals(getJsonPath(response,"name"),expectedName);
     }
 
 

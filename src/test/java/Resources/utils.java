@@ -4,6 +4,8 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import java.io.*;
@@ -31,8 +33,14 @@ public class utils {
         FileInputStream fis = new FileInputStream("C:\\Users\\Nidhi Upreti\\IdeaProjects\\Rest\\src\\test\\java\\Resources\\GlobalValues.properties");
         Properties p = new Properties();
         p.load(fis);
-        System.out.println(p.getProperty("baseURI")+"      printed");
+//        System.out.println(p.getProperty("baseURI")+"      printed");
         return p.getProperty(key);
 
+    }
+    
+    public String getJsonPath(Response response, String key){
+        String Resp = response.asString();
+        JsonPath js = new JsonPath(Resp);
+        return js.get(key).toString();
     }
 }
