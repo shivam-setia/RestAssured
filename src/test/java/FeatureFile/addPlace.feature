@@ -11,6 +11,12 @@ Feature: Validating add place API's
 
     Examples:
       |    name      |     address          | language |
-      |    shivam    |  World Trade Centre  |  Punjabi |
+      |    just created    |  World Trade Centre  |  Punjabi |
       | shivam setia |      Delhi           |  English |
 
+Scenario: verify if Delete functionality is working
+
+  Given Delete payload
+  When user calls "deletePlaceAPI" with "post" method
+  Then the API call is success with status code "200"
+  And "status" in response body is "OK"

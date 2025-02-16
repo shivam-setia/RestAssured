@@ -6,6 +6,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestLogSpecification;
 import io.restassured.specification.RequestSpecification;
 
 import java.io.*;
@@ -20,6 +21,7 @@ public class utils {
             req = new RequestSpecBuilder().setBaseUri(getGlobalVAlues("baseURI"))
                     .addQueryParam("key", "qaclick123").setContentType(ContentType.JSON)
                     .addFilter(RequestLoggingFilter.logRequestTo(log))
+                    .addFilter(RequestLoggingFilter.with())
                     .addFilter(ResponseLoggingFilter.logResponseTo(log))
                     .build();
             return req;
