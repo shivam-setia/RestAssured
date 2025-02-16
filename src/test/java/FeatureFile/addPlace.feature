@@ -1,5 +1,5 @@
 Feature: Validating add place API's
-
+@AddPlace
   Scenario Outline: Verify if place is being added successfully using AddPlaceAPI
 
     Given Add place paylod with "<name>" "<address>"  "<language>"
@@ -13,7 +13,7 @@ Feature: Validating add place API's
       |    name      |     address          | language |
       |    just created    |  World Trade Centre  |  Punjabi |
       | shivam setia |      Delhi           |  English |
-
+@deletePlace
 Scenario: verify if Delete functionality is working
 
   Given Delete payload

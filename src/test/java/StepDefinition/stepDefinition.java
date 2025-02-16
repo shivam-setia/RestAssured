@@ -125,13 +125,5 @@ public void user_calls_with_method(String endPoint, String method) {
         // Write code here that turns the phrase above into concrete actions
         assertEquals(response.getStatusCode(),200);
     }
-
-//    @Then("{string} in response body is {string}")
-//    public void in_response_body_is(String keyValue, String Expvalue) {
-//        // Write code here that turns the phrase above into concrete actions
-////        throw new io.cucumber.java.PendingException();
-//        assertEquals(getJsonPath(response,keyValue),Expvalue);
-//
-//    }
 }
 

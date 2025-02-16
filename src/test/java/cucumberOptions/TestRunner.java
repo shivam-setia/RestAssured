@@ -7,5 +7,5 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/java/FeatureFile",glue = {"StepDefinition"})
 public class TestRunner {
-
+//,tags= "@deletePlace"
 }
